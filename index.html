@@ -1,0 +1,1395 @@
+<title>今晚打烊</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@300;500&family=IBM+Plex+Mono:wght@300;400&display=swap");
+
+/* ── 单一夜间视觉：深黄昏靛 + 灯火琥珀。低饱和 / 低对比 / 低色温 ── */
+:root{
+  --dusk-0:#0d1017;
+  --dusk-1:#12161f;
+  --surface:#181d28;
+  --surface-2:#202632;
+  --line:rgba(226,220,209,0.09);
+  --line-2:rgba(226,220,209,0.17);
+  --moon:#e2dcd1;
+  --moon-dim:#9aa0ad;
+  --moon-faint:#6b7280;
+  --lamp:#d3a06e;
+  --lamp-soft:rgba(211,160,110,0.13);
+  --lamp-dim:#8c6a49;
+  --sage:#8ea394;
+  --sage-soft:rgba(142,163,148,0.14);
+  --dusk-blue:#7b83a8;
+  --warm:0;
+  --serif:"Noto Serif SC",Songti SC,STSong,serif;
+  --sans:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r-lg:26px; --r-md:16px; --r-sm:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none !important}
+body{
+  background:var(--dusk-0);
+  color:var(--moon);
+  font-family:var(--sans);
+  font-weight:300;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+.ambient{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 55% 35% at 68% 12%, rgba(211,160,110,0.10), transparent 62%),
+    radial-gradient(ellipse 60% 45% at 20% 88%, rgba(123,131,168,0.10), transparent 66%),
+    linear-gradient(180deg,var(--dusk-0),var(--dusk-1) 55%,var(--dusk-0));
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+:focus-visible{outline:1px solid var(--lamp);outline-offset:3px;border-radius:4px}
+a{color:var(--lamp);text-decoration:none;border-bottom:1px solid var(--lamp-dim)}
+
+/* ── 舞台布局 ── */
+.stage{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:296px minmax(0,392px);
+  gap:56px;justify-content:center;align-items:start;
+  padding:44px 24px 72px;
+}
+@media (max-width:860px){
+  .stage{grid-template-columns:minmax(0,392px);gap:32px;padding:24px 16px 56px}
+  .rail{order:2}
+}
+
+/* ── 左栏：产品说明与需求映射 ── */
+.rail{display:flex;flex-direction:column;gap:26px;padding-top:10px}
+.brand-name{font-family:var(--serif);font-weight:500;font-size:30px;letter-spacing:.14em;line-height:1.2}
+.brand-sub{color:var(--moon-dim);font-size:13px;margin-top:8px;max-width:30ch}
+.rail-block{border-top:1px solid var(--line);padding-top:16px}
+.rail-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--moon-faint);text-transform:uppercase;margin-bottom:12px}
+.map{display:flex;flex-direction:column}
+.map button{
+  display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:baseline;
+  text-align:left;padding:7px 0;border-bottom:1px solid var(--line);width:100%;
+}
+.map button:last-child{border-bottom:none}
+.map .idx{font-family:var(--mono);font-size:10px;color:var(--lamp-dim)}
+.map .nm{font-size:13.5px}
+.map .desc{grid-column:2;font-size:11.5px;color:var(--moon-faint);line-height:1.55}
+.map button:hover .nm{color:var(--lamp)}
+
+.warm-row{display:flex;align-items:center;gap:10px}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:2px;background:var(--line-2);border-radius:2px;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--lamp);border:none;cursor:pointer
+}
+input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--lamp);border:none;cursor:pointer}
+.warm-val{font-family:var(--mono);font-size:11px;color:var(--moon-dim);min-width:44px;text-align:right}
+.note{font-size:11.5px;color:var(--moon-faint);line-height:1.65}
+.ghost-btn{border:1px solid var(--line-2);border-radius:var(--r-sm);padding:6px 12px;font-size:12px;color:var(--moon-dim)}
+.ghost-btn:hover{border-color:var(--lamp-dim);color:var(--lamp)}
+.refs{font-size:11px;color:var(--moon-faint);line-height:1.7}
+.refs sup{color:var(--lamp-dim);font-family:var(--mono)}
+
+/* ── 手机 ── */
+.phone-wrap{position:relative}
+.phone{
+  position:relative;width:100%;max-width:392px;height:min(792px,86vh);min-height:620px;
+  border:1px solid var(--line-2);border-radius:38px;background:var(--dusk-1);
+  overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 40px 90px -40px rgba(0,0,0,0.85), 0 0 0 8px rgba(226,220,209,0.02);
+  filter:sepia(calc(var(--warm)*0.62)) brightness(calc(1 - var(--warm)*0.13)) contrast(calc(1 - var(--warm)*0.05));
+  transition:filter .5s ease;
+}
+.statusbar{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 24px 4px;font-family:var(--mono);font-size:11px;color:var(--moon-faint);flex:none;
+}
+.viewport{flex:1;overflow-y:auto;overflow-x:hidden;padding:8px 22px 20px;scrollbar-width:thin}
+.viewport::-webkit-scrollbar{width:4px}
+.viewport::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px}
+
+/* ── 底部导航 ── */
+.tabbar{flex:none;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);padding:6px 8px 14px;gap:2px}
+.tabbar button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;color:var(--moon-faint);font-size:11px}
+.tabbar .dot{width:4px;height:4px;border-radius:50%;background:transparent}
+.tabbar button[aria-selected=true]{color:var(--lamp)}
+.tabbar button[aria-selected=true] .dot{background:var(--lamp)}
+
+/* ── 通用块 ── */
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--moon-faint);text-transform:uppercase}
+.screen-title{font-family:var(--serif);font-weight:300;font-size:23px;line-height:1.45;text-wrap:balance;margin-top:6px}
+.lede{color:var(--moon-dim);font-size:13px;margin-top:10px;max-width:30ch}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:16px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.primary{
+  display:block;width:100%;text-align:center;padding:14px;border-radius:var(--r-md);
+  background:var(--lamp-soft);border:1px solid rgba(211,160,110,0.34);color:var(--lamp);
+  font-size:14.5px;letter-spacing:.06em;transition:background .25s,border-color .25s;
+}
+.primary:hover:not(:disabled){background:rgba(211,160,110,0.2);border-color:var(--lamp)}
+.primary:disabled{opacity:.34;cursor:default}
+.quiet{display:block;width:100%;text-align:center;padding:11px;color:var(--moon-faint);font-size:12.5px}
+.quiet:hover{color:var(--moon-dim)}
+
+/* ── 锁屏通知 ── */
+.lock{position:absolute;inset:0;z-index:20;background:rgba(9,11,16,0.93);backdrop-filter:blur(6px);
+  display:flex;flex-direction:column;align-items:center;padding:64px 22px 22px;text-align:center}
+.lock-time{font-family:var(--mono);font-weight:300;font-size:62px;letter-spacing:-.02em;line-height:1}
+.lock-date{color:var(--moon-faint);font-size:12.5px;margin-top:6px;letter-spacing:.1em}
+.notif{
+  width:100%;margin-top:40px;text-align:left;background:rgba(32,38,50,0.92);border:1px solid var(--line-2);
+  border-radius:18px;padding:13px 15px;display:grid;grid-template-columns:30px 1fr;gap:11px;
+  animation:slide-in .7s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes slide-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.notif-icon{width:30px;height:30px;border-radius:8px;background:var(--lamp-soft);display:grid;place-items:center;font-size:15px}
+.notif-app{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--moon-faint);text-transform:uppercase}
+.notif-title{font-size:13.5px;margin-top:3px}
+.notif-body{font-size:12.5px;color:var(--moon-dim);margin-top:3px;line-height:1.6}
+.notif-cta{margin-top:10px;font-size:12px;color:var(--lamp)}
+.lock-hint{margin-top:auto;font-size:11.5px;color:var(--moon-faint)}
+
+/* ── 仪式步骤 ── */
+.steps{display:flex;gap:7px;align-items:center;margin-bottom:22px}
+.step-pip{height:2px;flex:1;background:var(--line-2);border-radius:2px;overflow:hidden}
+.step-pip span{display:block;height:100%;width:0;background:var(--lamp);transition:width .6s ease}
+.step-pip.on span{width:100%}
+.step-no{font-family:var(--mono);font-size:10px;color:var(--lamp-dim);letter-spacing:.2em}
+
+/* Done 清单 */
+.slots{display:flex;flex-direction:column;gap:9px;margin-top:18px}
+.slot{display:grid;grid-template-columns:20px 1fr;align-items:center;gap:9px;
+  border-bottom:1px solid var(--line);padding-bottom:9px}
+.slot .n{font-family:var(--mono);font-size:11px;color:var(--moon-faint)}
+.slot input{width:100%;background:none;border:none;color:var(--moon);font:inherit;font-size:14px;padding:5px 0}
+.slot input::placeholder{color:var(--moon-faint);opacity:.65}
+.slot input:focus{outline:none}
+.slot.filled .n{color:var(--lamp)}
+.count-hint{font-size:11.5px;color:var(--moon-faint);margin-top:12px;font-family:var(--mono)}
+
+/* 归档信封动画 */
+.envelope{position:relative;height:160px;display:grid;place-items:center;margin-top:6px}
+.env-card{
+  position:absolute;width:78%;background:var(--surface-2);border:1px solid var(--line-2);
+  border-radius:var(--r-sm);padding:11px 13px;font-size:12.5px;color:var(--moon-dim);
+  transition:transform 1.1s cubic-bezier(.5,0,.2,1),opacity 1.1s ease;
+}
+.env-body{
+  width:82%;height:96px;border:1px solid var(--line-2);border-radius:var(--r-sm);
+  background:linear-gradient(180deg,var(--surface),var(--surface-2));
+  display:grid;place-items:center;color:var(--moon-faint);font-size:12px;letter-spacing:.16em;font-family:var(--mono)
+}
+.archived .env-card{transform:translateY(46px) scale(.86);opacity:0}
+
+/* 忧虑便签 */
+.notes{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.note-item{
+  background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:11px 13px;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
+  transform-style:preserve-3d;transition:transform .8s ease,opacity .8s ease;
+}
+.note-item.dropped{transform:rotateX(78deg) translateY(-12px);opacity:0}
+.note-item button{color:var(--moon-faint);font-size:11px;flex:none}
+.note-input{display:flex;gap:9px;margin-top:14px;border-bottom:1px solid var(--line-2);padding-bottom:8px}
+.note-input input{flex:1;background:none;border:none;color:var(--moon);font:inherit;font-size:14px}
+.note-input input:focus{outline:none}
+.note-input input::placeholder{color:var(--moon-faint);opacity:.65}
+.note-input button{color:var(--lamp);font-size:12.5px}
+.reassure{
+  margin-top:20px;border-left:1px solid var(--sage);padding:2px 0 2px 14px;
+  color:var(--sage);font-size:13px;font-family:var(--serif);line-height:1.75;
+}
+
+/* 播放器 */
+.sound-pick{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.sound{
+  display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;text-align:left;
+  border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;background:var(--surface);
+}
+.sound[aria-pressed=true]{border-color:rgba(211,160,110,0.4);background:var(--lamp-soft)}
+.sound .s-nm{font-size:14px}
+.sound .s-dc{font-size:11.5px;color:var(--moon-faint);margin-top:2px;line-height:1.5}
+.sound .s-tag{font-family:var(--mono);font-size:9.5px;color:var(--lamp-dim);letter-spacing:.12em}
+.ring-wrap{position:relative;display:grid;place-items:center;margin:22px 0 10px}
+.ring{transform:rotate(-90deg)}
+.ring-mid{position:absolute;text-align:center}
+.ring-time{font-family:var(--mono);font-size:34px;font-weight:300;letter-spacing:.02em}
+.ring-lbl{font-size:11.5px;color:var(--moon-faint);margin-top:2px;min-height:20px}
+.breath{
+  position:absolute;width:132px;height:132px;border-radius:50%;
+  background:radial-gradient(circle,rgba(211,160,110,0.22),rgba(211,160,110,0) 70%);
+  transition:transform 1s linear,opacity .6s ease;opacity:0;
+}
+.dur-row{display:flex;gap:7px;margin-top:6px}
+.dur-row button{flex:1;border:1px solid var(--line);border-radius:var(--r-sm);padding:8px 0;font-size:12px;color:var(--moon-dim)}
+.dur-row button[aria-pressed=true]{border-color:var(--lamp-dim);color:var(--lamp);background:var(--lamp-soft)}
+.vol-row{display:flex;align-items:center;gap:11px;margin-top:16px;color:var(--moon-faint);font-size:11px}
+
+/* 完成 */
+.done-seal{text-align:center;padding:36px 0 8px}
+.seal-mark{
+  width:82px;height:82px;margin:0 auto 22px;border-radius:50%;border:1px solid var(--lamp-dim);
+  display:grid;place-items:center;color:var(--lamp);font-family:var(--serif);font-size:26px;
+  background:var(--lamp-soft);animation:seal .9s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes seal{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.reward{display:inline-flex;align-items:center;gap:7px;margin-top:16px;font-family:var(--mono);font-size:12px;color:var(--lamp)}
+
+/* 评分 */
+.rate-row{margin-top:18px}
+.rate-lbl{font-size:13px;display:flex;justify-content:space-between;align-items:baseline}
+.rate-lbl span{font-size:11.5px;color:var(--moon-faint)}
+.dots{display:flex;gap:8px;margin-top:10px}
+.dots button{
+  flex:1;height:38px;border:1px solid var(--line);border-radius:var(--r-sm);
+  color:var(--moon-faint);font-family:var(--mono);font-size:12.5px;
+}
+.dots button[aria-pressed=true]{border-color:var(--lamp-dim);color:var(--lamp);background:var(--lamp-soft)}
+.chart-legend{display:flex;gap:16px;font-size:11.5px;color:var(--moon-dim);margin-top:12px}
+.chart-legend i{display:inline-block;width:14px;height:2px;vertical-align:middle;margin-right:6px}
+
+/* 日历 */
+.cal-head{display:flex;justify-content:space-between;align-items:baseline;margin-top:18px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:12px}
+.cal-dow{font-family:var(--mono);font-size:9.5px;color:var(--moon-faint);text-align:center;padding-bottom:4px}
+.cal-cell{aspect-ratio:1;border-radius:9px;display:grid;place-items:center;font-family:var(--mono);font-size:11.5px;color:var(--moon-faint);border:1px solid transparent}
+.cal-cell.lit{color:var(--lamp);background:var(--lamp-soft);border-color:rgba(211,160,110,0.28)}
+.cal-cell.today{border-color:var(--line-2);color:var(--moon)}
+.cal-cell.blank{visibility:hidden}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:18px}
+.stat{border:1px solid var(--line);border-radius:var(--r-md);padding:13px 14px}
+.stat .v{font-family:var(--mono);font-size:24px;color:var(--lamp);line-height:1.2;font-variant-numeric:tabular-nums}
+.stat .k{font-size:11.5px;color:var(--moon-faint);margin-top:3px}
+.shop-item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.shop-item:last-child{border-bottom:none}
+.shop-nm{font-size:13.5px}
+.shop-cost{font-family:var(--mono);font-size:11px;color:var(--moon-faint);margin-top:2px}
+.shop-item button{border:1px solid var(--line-2);border-radius:var(--r-sm);padding:6px 13px;font-size:12px;color:var(--lamp)}
+.shop-item button:disabled{color:var(--moon-faint);border-color:var(--line);cursor:default}
+
+/* 总结 / LLM */
+.seg{display:flex;gap:6px;margin-top:16px}
+.seg button{flex:1;border:1px solid var(--line);border-radius:var(--r-sm);padding:7px 0;font-size:12.5px;color:var(--moon-dim)}
+.seg button[aria-pressed=true]{border-color:var(--lamp-dim);color:var(--lamp);background:var(--lamp-soft)}
+.consent{border:1px solid rgba(142,163,148,0.3);background:var(--sage-soft);border-radius:var(--r-md);padding:15px}
+.consent h4{font-size:13.5px;font-weight:400;color:var(--sage)}
+.consent p{font-size:12.5px;color:var(--moon-dim);margin-top:8px;line-height:1.7}
+.consent ul{list-style:none;margin-top:10px;font-size:12px;color:var(--moon-dim);display:flex;flex-direction:column;gap:5px}
+.consent li::before{content:"·";color:var(--sage);margin-right:7px}
+.consent-btns{display:flex;gap:9px;margin-top:14px}
+.consent-btns button{flex:1;padding:9px;border-radius:var(--r-sm);font-size:12.5px;border:1px solid var(--line-2);color:var(--moon-dim)}
+.consent-btns button.yes{border-color:var(--sage);color:var(--sage);background:rgba(142,163,148,0.1)}
+.kw{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.kw span{border:1px solid var(--lamp-dim);color:var(--lamp);border-radius:100px;padding:4px 12px;font-size:12px}
+.summary-text{font-family:var(--serif);font-size:14.5px;line-height:1.95;color:var(--moon);margin-top:14px;white-space:pre-wrap}
+.privacy-line{font-size:11px;color:var(--moon-faint);margin-top:16px;display:flex;justify-content:space-between;gap:10px}
+.week-list{margin-top:16px;display:flex;flex-direction:column;gap:9px}
+.week-day{display:grid;grid-template-columns:52px 1fr;gap:10px;font-size:12.5px;border-bottom:1px solid var(--line);padding-bottom:9px}
+.week-day .d{font-family:var(--mono);font-size:10.5px;color:var(--moon-faint)}
+.week-day .items{color:var(--moon-dim);line-height:1.65}
+
+/* 模型设置 */
+.cfg-toggle{display:flex;justify-content:space-between;align-items:center;width:100%;gap:10px}
+.cfg-toggle .s-tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--lamp-dim)}
+.cfg-row{display:grid;grid-template-columns:64px 1fr;gap:10px;align-items:center;margin-top:10px;font-size:12px;color:var(--moon-faint)}
+.cfg-row input{
+  width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;
+  padding:7px 10px;color:var(--moon);font-family:var(--mono);font-size:11.5px;
+}
+.cfg-row input:focus{outline:none;border-color:var(--lamp-dim)}
+
+/* toast */
+.toast{
+  position:absolute;left:50%;bottom:88px;transform:translate(-50%,10px);
+  background:var(--surface-2);border:1px solid var(--line-2);border-radius:100px;
+  padding:9px 18px;font-size:12.5px;color:var(--moon);opacity:0;pointer-events:none;
+  transition:opacity .35s,transform .35s;z-index:30;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+.demo-flag{
+  display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;
+  color:var(--moon-faint);border:1px solid var(--line);border-radius:4px;padding:1px 6px;margin-left:8px;
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+
+<div class="ambient"></div>
+
+<div class="stage">
+  <!-- ───────────── 左栏 ───────────── -->
+  <aside class="rail">
+    <div>
+      <div class="brand-name">今晚打烊</div>
+      <p class="brand-sub">把睡前最后 30 分钟，做成一场关店仪式：盘点今天、收好明天、熄灯。</p>
+    </div>
+
+    <div class="rail-block">
+      <div class="rail-h">核心模块 · 点击跳转</div>
+      <nav class="map" id="map"></nav>
+    </div>
+
+    <div class="rail-block">
+      <div class="rail-h">夜览联动</div>
+      <div class="warm-row">
+        <input type="range" id="warm" min="0" max="100" value="0" aria-label="界面色温">
+        <span class="warm-val" id="warmVal">标准</span>
+      </div>
+      <p class="note" style="margin-top:10px">模拟系统「夜览 / 护眼」开启程度。开得越高，界面色温越暖、亮度越低，减少蓝光对褪黑素的抑制。</p>
+    </div>
+
+    <div class="rail-block">
+      <div class="rail-h">数据与隐私</div>
+      <p class="note">Done 清单与忧虑便签只写在这台设备的浏览器里，不上传。只有你主动点开「周报」，当周的 Done 文字才会发给 AI 生成摘要；忧虑便签和评分永远不出设备。</p>
+      <button class="ghost-btn" id="reset" style="margin-top:12px">重置为示例数据</button>
+    </div>
+
+    <div class="rail-block">
+      <div class="rail-h">产品依据</div>
+      <p class="refs"><sup>[1]</sup> Aloulou 等，2025，<i>Sleep Medicine</i>：睡前 30 分钟听由本人慢波脑电转化的个性化声音序列，可显著改善睡眠质量与时长。</p>
+      <p class="refs" style="margin-top:8px"><sup>[2]</sup> Kiarashi 等，2025，medRxiv 预印本：在慢波上升期给予闭环听觉刺激，可增强慢波活动。</p>
+      <p class="note" style="margin-top:12px">本演示中的声音由浏览器实时合成，用于呈现交互与节律，不等同于论文中的临床方案。</p>
+    </div>
+  </aside>
+
+  <!-- ───────────── 手机 ───────────── -->
+  <div class="phone-wrap">
+    <div class="phone" id="phone">
+      <div class="statusbar"><span id="clock">23:02</span><span>今晚打烊</span></div>
+
+      <!-- 锁屏 / 提醒模块 -->
+      <div class="lock" id="lock">
+        <div class="lock-time" id="lockTime">23:02</div>
+        <div class="lock-date" id="lockDate">周四 · 9 月 10 日</div>
+        <button class="notif" id="notif">
+          <div class="notif-icon">🌙</div>
+          <div>
+            <div class="notif-app">今晚打烊 · 现在</div>
+            <div class="notif-title">离你设的就寝时间还有 30 分钟</div>
+            <div class="notif-body">不用现在就睡。先花两分钟，把今天存个档？</div>
+            <div class="notif-cta">轻点，开始打烊 →</div>
+          </div>
+        </button>
+        <div class="lock-hint">提醒模块：在设定时间把入口递到眼前，而不是等你想起来</div>
+      </div>
+
+      <div class="viewport" id="viewport">
+
+        <!-- ══ 今晚 ══ -->
+        <section id="tab-night">
+          <!-- 步骤 1：Done 清单 -->
+          <div id="step-done" hidden>
+            <div class="steps"><span class="step-no">01</span>
+              <span class="step-pip on"><span></span></span>
+              <span class="step-pip"><span></span></span>
+              <span class="step-pip"><span></span></span>
+            </div>
+            <div class="eyebrow">存档今天</div>
+            <h2 class="screen-title">今天，你做成了哪三件事？</h2>
+            <p class="lede">不必是大事。倒水、回消息、走了两站路，都算。</p>
+            <div class="slots" id="doneSlots"></div>
+            <p class="count-hint" id="doneHint">0 / 3</p>
+            <div class="stack" style="margin-top:24px">
+              <button class="primary" id="doneBtn" disabled>完　结</button>
+              <button class="quiet" id="doneSkip">今天实在想不出 →</button>
+            </div>
+          </div>
+
+          <!-- 归档动画 -->
+          <div id="step-archive" hidden>
+            <div class="steps"><span class="step-no">01</span>
+              <span class="step-pip on"><span></span></span>
+              <span class="step-pip"><span></span></span>
+              <span class="step-pip"><span></span></span>
+            </div>
+            <div class="eyebrow">归档中</div>
+            <h2 class="screen-title">今天这一页，收进抽屉了。</h2>
+            <div class="envelope" id="envelope">
+              <div class="env-card" id="envCard"></div>
+              <div class="env-body">已 归 档</div>
+            </div>
+            <p class="lede" style="margin:0 auto">蔡格尼克效应：未完成的事会一直占用注意力。给它一个物理动作上的「关闭」，大脑才肯松手。</p>
+            <button class="primary" id="toWorry" style="margin-top:26px">下一步：清空明天</button>
+          </div>
+
+          <!-- 步骤 2：忧虑便签 -->
+          <div id="step-worry" hidden>
+            <div class="steps"><span class="step-no">02</span>
+              <span class="step-pip on"><span></span></span>
+              <span class="step-pip on"><span></span></span>
+              <span class="step-pip"><span></span></span>
+            </div>
+            <div class="eyebrow">清空明天</div>
+            <h2 class="screen-title">还有什么在脑子里转？</h2>
+            <p class="lede">写下来就行，不用想解决办法。写完点「放下」。</p>
+            <div class="notes" id="worryList"></div>
+            <div class="note-input">
+              <input id="worryInput" placeholder="比如：明早 10 点评审，结尾还没写" maxlength="60">
+              <button id="worryAdd">写下</button>
+            </div>
+            <div class="stack" style="margin-top:24px">
+              <button class="primary" id="worryBtn" disabled>放　下</button>
+              <button class="quiet" id="worrySkip">今晚脑子是空的 →</button>
+            </div>
+          </div>
+
+          <!-- 放下后的安抚 -->
+          <div id="step-released" hidden>
+            <div class="steps"><span class="step-no">02</span>
+              <span class="step-pip on"><span></span></span>
+              <span class="step-pip on"><span></span></span>
+              <span class="step-pip"><span></span></span>
+            </div>
+            <div class="eyebrow">已保管</div>
+            <h2 class="screen-title" id="releasedTitle">3 件事，已经替你收好了。</h2>
+            <p class="reassure">已安全保存。明早 8:00 我会提醒你。<br>在那之前，它们不归你管。</p>
+            <p class="lede" style="margin-top:20px">头脑清空技术：把念头外部化，降低入睡前的认知唤醒度。这些内容只留在这台设备上。</p>
+            <button class="primary" id="toPlayer" style="margin-top:26px">下一步：熄灯</button>
+          </div>
+
+          <!-- 步骤 3：声音锚点 -->
+          <div id="step-player" hidden>
+            <div class="steps"><span class="step-no">03</span>
+              <span class="step-pip on"><span></span></span>
+              <span class="step-pip on"><span></span></span>
+              <span class="step-pip on"><span></span></span>
+            </div>
+            <div class="eyebrow">完结仪式</div>
+            <h2 class="screen-title" id="playerTitle">选一段今晚的声音。</h2>
+            <p class="lede" id="playerLede">这段声音只在打烊流程里出现。听得够多，它就会变成「今天结束了」的开关。</p>
+
+            <div class="sound-pick" id="soundPick"></div>
+
+            <div class="ring-wrap">
+              <div class="breath" id="breath"></div>
+              <svg class="ring" width="188" height="188" viewBox="0 0 188 188" aria-hidden="true">
+                <circle cx="94" cy="94" r="84" fill="none" stroke="rgba(226,220,209,0.09)" stroke-width="1.5"></circle>
+                <circle id="ringArc" cx="94" cy="94" r="84" fill="none" stroke="#d3a06e" stroke-width="1.5"
+                        stroke-linecap="round" stroke-dasharray="527.8" stroke-dashoffset="527.8" opacity="0.85"></circle>
+              </svg>
+              <div class="ring-mid">
+                <div class="ring-time" id="ringTime">30:00</div>
+                <div class="ring-lbl" id="ringLbl">未开始</div>
+              </div>
+            </div>
+
+            <div class="dur-row" id="durRow">
+              <button data-min="30" aria-pressed="true">30 分钟</button>
+              <button data-min="3" aria-pressed="false">3 分钟</button>
+              <button data-min="0.5" aria-pressed="false">30 秒<span class="demo-flag">演示</span></button>
+            </div>
+
+            <div class="vol-row">
+              <span>音量</span>
+              <input type="range" id="vol" min="0" max="100" value="55" aria-label="音量">
+            </div>
+
+            <div class="stack" style="margin-top:20px">
+              <button class="primary" id="playBtn">开始播放</button>
+              <button class="quiet" id="stopBtn" hidden>提前结束</button>
+            </div>
+          </div>
+
+          <!-- 完成 -->
+          <div id="step-sealed" hidden>
+            <div class="done-seal">
+              <div class="seal-mark">烊</div>
+              <div class="eyebrow">今日已打烊</div>
+              <h2 class="screen-title" style="margin-top:10px">今天，到此为止。</h2>
+              <p class="lede" style="margin:10px auto 0">明早 8:00 见。<br>那三件放下的事，我替你记着。</p>
+              <div class="reward" id="rewardLine">+20 灯火 · 连续 5 天</div>
+            </div>
+            <button class="quiet" id="backHome" style="margin-top:20px">回到今晚</button>
+          </div>
+
+          <!-- 今晚首页（已完成过） -->
+          <div id="step-home" hidden>
+            <div class="eyebrow">今晚</div>
+            <h2 class="screen-title" id="homeTitle">还有 30 分钟到就寝时间。</h2>
+            <p class="lede" id="homeLede">三步，大概两分钟。</p>
+            <div class="stack" style="margin-top:24px">
+              <div class="panel">
+                <div class="eyebrow">打烊流程</div>
+                <div class="week-list" style="margin-top:12px">
+                  <div class="week-day"><span class="d">01</span><span class="items">存档今天 · Done 清单</span></div>
+                  <div class="week-day"><span class="d">02</span><span class="items">清空明天 · 忧虑便签</span></div>
+                  <div class="week-day" style="border:none;padding:0"><span class="d">03</span><span class="items">熄灯 · 声音锚点 30 分钟</span></div>
+                </div>
+              </div>
+              <button class="primary" id="startRitual">开始打烊</button>
+              <button class="quiet" id="showLock">看看提醒长什么样 →</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 晨报 ══ -->
+        <section id="tab-morning" hidden>
+          <div class="eyebrow">一夜好眠 · 报告</div>
+          <h2 class="screen-title" id="mornTitle">昨晚怎么样？</h2>
+          <p class="lede" id="mornLede">两个问题，十秒钟。</p>
+
+          <div id="ratePanel">
+            <div class="rate-row">
+              <div class="rate-lbl">完结感<span>今天算是过完了吗</span></div>
+              <div class="dots" id="dotsClosure"></div>
+            </div>
+            <div class="rate-row">
+              <div class="rate-lbl">入睡速度<span>躺下到睡着的快慢</span></div>
+              <div class="dots" id="dotsOnset"></div>
+            </div>
+            <button class="primary" id="saveRate" style="margin-top:22px" disabled>记下来</button>
+          </div>
+
+          <div class="panel" style="margin-top:24px">
+            <div class="eyebrow">最近七天</div>
+            <div id="chartHost" style="margin-top:10px"></div>
+            <div class="chart-legend">
+              <span><i style="background:#d3a06e"></i>完结感</span>
+              <span><i style="background:#7b83a8"></i>入睡速度</span>
+            </div>
+          </div>
+          <p class="privacy-line"><span>评分只存在本机</span><span id="mornAvg"></span></p>
+        </section>
+
+        <!-- ══ 日历 ══ -->
+        <section id="tab-calendar" hidden>
+          <div class="eyebrow">打卡 · 灯火</div>
+          <h2 class="screen-title">每熄一次灯，亮一盏。</h2>
+          <div class="cal-head">
+            <span id="calMonth" style="font-size:14px"></span>
+            <span class="eyebrow" id="calCount"></span>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+          <div class="stat-row">
+            <div class="stat"><div class="v" id="statStreak">0</div><div class="k">连续打烊（天）</div></div>
+            <div class="stat"><div class="v" id="statPoints">0</div><div class="k">灯火余额</div></div>
+          </div>
+          <div class="panel" style="margin-top:16px">
+            <div class="eyebrow">兑换</div>
+            <div id="shop" style="margin-top:6px"></div>
+          </div>
+          <p class="privacy-line"><span>播放结束后自动打卡，无需手动</span></p>
+        </section>
+
+        <!-- ══ 总结 ══ -->
+        <section id="tab-report" hidden>
+          <div class="eyebrow">Done · 总结</div>
+          <h2 class="screen-title">这段时间，你其实做了这些。</h2>
+          <div class="seg" id="rangeSeg">
+            <button data-range="week" aria-pressed="true">本周</button>
+            <button data-range="month" aria-pressed="false">本月</button>
+          </div>
+
+          <div id="consentCard" class="consent" style="margin-top:18px" hidden>
+            <h4>这个板块会用 AI 帮你总结</h4>
+            <p>只在你点击时上传给 <span id="consentTarget">内置 AI</span>，不做后台自动处理。</p>
+            <ul>
+              <li>会发送：本周 Done 清单的文字</li>
+              <li>不会发送：忧虑便签、评分、打卡记录</li>
+              <li>原文不会被保存</li>
+            </ul>
+            <div class="consent-btns">
+              <button class="yes" id="consentYes">同意并生成</button>
+              <button id="consentNo">暂不，只看列表</button>
+            </div>
+          </div>
+
+          <div id="reportBody" hidden>
+            <div class="panel" style="margin-top:18px">
+              <div class="eyebrow">关键词</div>
+              <div class="kw" id="kwHost"><span>生成中…</span></div>
+              <div class="summary-text" id="summaryHost">正在读你这周写下的事…</div>
+            </div>
+            <p class="privacy-line">
+              <span id="aiState">AI 摘要已开启 · 仅在你点击时上传</span>
+              <button id="revoke" style="font-size:11px;color:var(--moon-faint)">撤回授权</button>
+            </p>
+          </div>
+
+          <div class="panel" style="margin-top:16px">
+            <button class="cfg-toggle" id="aiCfgToggle" aria-expanded="false">
+              <span class="eyebrow">模型设置</span>
+              <span class="s-tag" id="aiCfgNow">内置 AI</span>
+            </button>
+            <div id="aiCfgBody" hidden>
+              <div class="seg" id="provSeg">
+                <button data-prov="sample" aria-pressed="true">内置 AI</button>
+                <button data-prov="dashscope" aria-pressed="false">阿里云百炼</button>
+              </div>
+              <div id="dsFields" hidden>
+                <label class="cfg-row"><span>接口地址</span><input id="dsBase" spellcheck="false"></label>
+                <label class="cfg-row"><span>模型</span><input id="dsModel" spellcheck="false" placeholder="qwen-plus"></label>
+                <label class="cfg-row"><span>API Key</span><input id="dsKey" type="password" spellcheck="false" placeholder="sk-…" autocomplete="off"></label>
+                <p class="note" style="margin-top:12px">接口地址填绝对地址（浏览器直连百炼）时必须填 Key，Key 只写在这台设备的浏览器里，不进页面源码。填相对地址如 <code>/api</code>（走你自建的转发）时，Key 留在服务端，这一栏留空即可。</p>
+                <p class="note" style="margin-top:8px;color:var(--lamp-dim)">在 claude.ai 托管的页面里，浏览器会拦截所有对外部接口的请求，这条通道发不出去。要真跑百炼，把这份 HTML 部署到你自己的域名下，或直接用浏览器打开本地文件。</p>
+                <div class="consent-btns">
+                  <button class="yes" id="dsSave">保存设置</button>
+                  <button id="dsClear">清除 Key</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:16px">
+            <div class="eyebrow" id="rawHead">本周清单 · 本机</div>
+            <div class="week-list" id="rawList"></div>
+          </div>
+        </section>
+
+      </div><!-- /viewport -->
+
+      <nav class="tabbar" id="tabbar">
+        <button data-tab="night" aria-selected="true"><span class="dot"></span>今晚</button>
+        <button data-tab="morning" aria-selected="false"><span class="dot"></span>晨报</button>
+        <button data-tab="calendar" aria-selected="false"><span class="dot"></span>日历</button>
+        <button data-tab="report" aria-selected="false"><span class="dot"></span>总结</button>
+      </nav>
+
+      <div class="toast" id="toast"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $ = (s,r)=> (r||document).querySelector(s);
+const $$ = (s,r)=> Array.from((r||document).querySelectorAll(s));
+const KEY = "daryang.v2";
+
+/* ────────── 数据层：默认本地 ────────── */
+const pad = n => String(n).padStart(2,"0");
+const fmt = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const shift = n => { const d=new Date(); d.setDate(d.getDate()+n); return d; };
+const TODAY = fmt(new Date());
+
+const SEED_DONE = [
+  ["把第二版原型改完了","冰箱清空，扔掉三盒过期的","看完一集纪录片"],
+  ["开周会全程没走神","学了 30 分钟日语","洗了攒两周的衣服"],
+  ["交了分析初稿","跑了 3 公里","给妈打了电话"],
+  ["把桌子收拾干净","回了拖了四天的邮件","早饭好好吃了"],
+  ["修好了那个一直报错的脚本","陪室友吃了顿饭"],
+  ["做完体检","换了床单","没有点外卖"],
+  ["带教了新来的实习生","把年假申请提交了","读了 20 页书"]
+];
+const SEED_RATE = [null,{c:4,o:3},{c:5,o:4},{c:3,o:3},{c:4,o:4},{c:4,o:2},{c:5,o:4}];
+
+function seed(){
+  const days = {};
+  for(let i=1;i<=7;i++){
+    const k = fmt(shift(-i));
+    const r = SEED_RATE[i-1];
+    days[k] = { done:SEED_DONE[i-1], worries:i%2?2:1, checked:true, sound:i%3===0?"noise":(i%2?"brainwave":"meditate"),
+                rating: r? {closure:r.c, onset:r.o} : null };
+  }
+  return { days, points:340, redeemed:[], aiConsent:false, seeded:true };
+}
+let S;
+function load(){
+  try{ const raw = localStorage.getItem(KEY); if(raw){ S = JSON.parse(raw); return; } }catch(e){}
+  S = seed(); save();
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function today(){ if(!S.days[TODAY]) S.days[TODAY] = {done:[],worries:0,checked:false,sound:null,rating:null}; return S.days[TODAY]; }
+function defaultAI(){
+  // 自部署版默认走同域转发 /api，Key 在服务端，测试者无需任何账号
+  return { provider:"dashscope", base:"/api", model:"qwen3.8-27b", key:"" };
+}
+load();
+if(!S.ai) { S.ai = defaultAI(); save(); }
+
+/* ────────── 提示条 ────────── */
+let toastT;
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove("show"), 2200);
+}
+
+/* ────────── 时钟 ────────── */
+function tickClock(){
+  const d = new Date();
+  const hhmm = pad(d.getHours())+":"+pad(d.getMinutes());
+  $("#clock").textContent = hhmm;
+  $("#lockTime").textContent = hhmm;
+  const dows = ["周日","周一","周二","周三","周四","周五","周六"];
+  $("#lockDate").textContent = dows[d.getDay()]+" · "+(d.getMonth()+1)+" 月 "+d.getDate()+" 日";
+}
+tickClock(); setInterval(tickClock, 20000);
+
+/* ────────── 标签页 ────────── */
+const TABS = ["night","morning","calendar","report"];
+function setTab(name){
+  TABS.forEach(t=>{ $("#tab-"+t).hidden = (t!==name); });
+  $$("#tabbar button").forEach(b=> b.setAttribute("aria-selected", String(b.dataset.tab===name)));
+  $("#viewport").scrollTop = 0;
+  if(name==="morning") renderMorning();
+  if(name==="calendar") renderCalendar();
+  if(name==="report") renderReport();
+}
+$$("#tabbar button").forEach(b=> b.addEventListener("click", ()=> setTab(b.dataset.tab)));
+
+/* ────────── 今晚：仪式流程 ────────── */
+const STEPS = ["home","done","archive","worry","released","player","sealed"];
+function setStep(name){
+  STEPS.forEach(s=> $("#step-"+s).hidden = (s!==name));
+  $("#viewport").scrollTop = 0;
+}
+function renderHome(){
+  const t = today();
+  if(t.checked){
+    $("#homeTitle").textContent = "今天已经打烊了。";
+    $("#homeLede").textContent = "再听一次也可以，但今天的灯火已经拿过了。";
+    $("#startRitual").textContent = "再走一遍";
+  }else{
+    $("#homeTitle").textContent = "还有 30 分钟到就寝时间。";
+    $("#homeLede").textContent = "三步，大概两分钟。";
+    $("#startRitual").textContent = "开始打烊";
+  }
+  setStep("home");
+}
+
+/* 锁屏 */
+$("#notif").addEventListener("click", ()=>{ $("#lock").hidden = true; startRitual(); });
+$("#showLock").addEventListener("click", ()=>{ $("#lock").hidden = false; });
+
+function startRitual(){
+  setTab("night");
+  const t = today();
+  draft = t.done.length ? t.done.slice(0,3) : ["","",""];
+  while(draft.length<3) draft.push("");
+  renderSlots();
+  setStep("done");
+}
+$("#startRitual").addEventListener("click", startRitual);
+$("#backHome").addEventListener("click", renderHome);
+
+/* 步骤 1：Done 清单 */
+let draft = ["","",""];
+function renderSlots(){
+  const host = $("#doneSlots"); host.innerHTML = "";
+  const ph = ["今天做成的第一件事","第二件","第三件（写不满也行）"];
+  draft.forEach((v,i)=>{
+    const row = document.createElement("label");
+    row.className = "slot" + (v.trim()? " filled":"");
+    row.innerHTML = '<span class="n">'+pad(i+1)+'</span>';
+    const inp = document.createElement("input");
+    inp.value = v; inp.placeholder = ph[i]; inp.maxLength = 40;
+    inp.addEventListener("input", ()=>{
+      draft[i] = inp.value;
+      row.classList.toggle("filled", !!inp.value.trim());
+      updateDoneBtn();
+    });
+    row.appendChild(inp); host.appendChild(row);
+  });
+  updateDoneBtn();
+}
+function filled(){ return draft.filter(v=>v.trim()).length; }
+function updateDoneBtn(){
+  const n = filled();
+  $("#doneHint").textContent = n+" / 3";
+  $("#doneBtn").disabled = n===0;
+}
+$("#doneBtn").addEventListener("click", ()=>{
+  const items = draft.map(v=>v.trim()).filter(Boolean);
+  today().done = items; save();
+  const card = $("#envCard");
+  card.textContent = ""; items.forEach(t=>{ const l=document.createElement("div"); l.textContent="· "+t; card.appendChild(l); });
+  $("#envelope").classList.remove("archived");
+  setStep("archive");
+  requestAnimationFrame(()=> setTimeout(()=> $("#envelope").classList.add("archived"), 420));
+});
+$("#doneSkip").addEventListener("click", ()=>{
+  today().done = []; save();
+  $("#envCard").innerHTML = "· 今天什么都没做，也过完了";
+  $("#envelope").classList.remove("archived");
+  setStep("archive");
+  requestAnimationFrame(()=> setTimeout(()=> $("#envelope").classList.add("archived"), 420));
+});
+$("#toWorry").addEventListener("click", ()=>{ worries = []; renderWorries(); setStep("worry"); });
+
+/* 步骤 2：忧虑便签 */
+let worries = [];
+function renderWorries(){
+  const host = $("#worryList"); host.innerHTML = "";
+  worries.forEach((w,i)=>{
+    const el = document.createElement("div");
+    el.className = "note-item";
+    el.innerHTML = '<span></span><button aria-label="删除">删掉</button>';
+    el.firstChild.textContent = w;
+    el.querySelector("button").addEventListener("click", ()=>{ worries.splice(i,1); renderWorries(); });
+    host.appendChild(el);
+  });
+  $("#worryBtn").disabled = worries.length===0;
+}
+function addWorry(){
+  const inp = $("#worryInput");
+  const v = inp.value.trim();
+  if(!v) return;
+  worries.push(v); inp.value = ""; renderWorries(); inp.focus();
+}
+$("#worryAdd").addEventListener("click", addWorry);
+$("#worryInput").addEventListener("keydown", e=>{ if(e.key==="Enter") addWorry(); });
+$("#worryBtn").addEventListener("click", ()=>{
+  const n = worries.length;
+  $$("#worryList .note-item").forEach((el,i)=> setTimeout(()=> el.classList.add("dropped"), i*140));
+  today().worries = n; save();
+  setTimeout(()=>{
+    $("#releasedTitle").textContent = n+" 件事，已经替你收好了。";
+    setStep("released");
+  }, 320 + n*140);
+});
+$("#worrySkip").addEventListener("click", ()=>{
+  today().worries = 0; save();
+  $("#releasedTitle").textContent = "那就直接熄灯。";
+  setStep("released");
+});
+$("#toPlayer").addEventListener("click", ()=>{ renderSounds(); setStep("player"); });
+
+/* ────────── 步骤 3：声音锚点 ────────── */
+const SOUNDS = [
+  {id:"brainwave", nm:"个性化脑波音乐", tag:"δ 2.6Hz", dc:"双耳节拍，载波随你今晚写下的事微调，靠近慢波节律"},
+  {id:"meditate",  nm:"引导式冥想",     tag:"4·7·8",   dc:"跟着光圈呼吸，配一句一句的引导，不用回应"},
+  {id:"noise",     nm:"自然白噪音",     tag:"棕噪声",  dc:"低频为主的雨声质感，掩蔽走廊与街上的突发声"}
+];
+let sound = "brainwave", durMin = 30;
+function renderSounds(){
+  const host = $("#soundPick"); host.innerHTML = "";
+  SOUNDS.forEach(s=>{
+    const b = document.createElement("button");
+    b.className = "sound"; b.setAttribute("aria-pressed", String(s.id===sound));
+    b.innerHTML = '<span><span class="s-nm"></span><span class="s-dc" style="display:block"></span></span><span class="s-tag"></span>';
+    b.querySelector(".s-nm").textContent = s.nm;
+    b.querySelector(".s-dc").textContent = s.dc;
+    b.querySelector(".s-tag").textContent = s.tag;
+    b.addEventListener("click", ()=>{
+      sound = s.id; renderSounds();
+      if(playing){ stopAudio(); startAudio(); }
+    });
+    host.appendChild(b);
+  });
+}
+$$("#durRow button").forEach(b=> b.addEventListener("click", ()=>{
+  durMin = parseFloat(b.dataset.min);
+  $$("#durRow button").forEach(x=> x.setAttribute("aria-pressed", String(x===b)));
+  if(!playing) resetRing();
+}));
+
+/* Web Audio 合成 */
+let actx=null, master=null, live=[], playing=false, timerId=null, endAt=0, totalMs=0, breathId=null;
+function ctx(){
+  if(!actx){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return null;
+    actx = new AC();
+    master = actx.createGain(); master.gain.value = 0; master.connect(actx.destination);
+  }
+  if(actx.state === "suspended") actx.resume();
+  return actx;
+}
+function vol(){ return parseInt($("#vol").value,10)/100 * 0.5; }
+function noiseBuffer(a){
+  const len = a.sampleRate*4, buf = a.createBuffer(1,len,a.sampleRate), d = buf.getChannelData(0);
+  let last=0;
+  for(let i=0;i<len;i++){ const w=Math.random()*2-1; last=(last+0.02*w)/1.02; d[i]=last*3.2; }
+  return buf;
+}
+function startAudio(){
+  const a = ctx(); if(!a) { toast("这个浏览器不支持音频合成"); return; }
+  const g = a.createGain(); g.gain.value = 1; g.connect(master);
+  live.push(g);
+  if(sound === "noise"){
+    const src = a.createBufferSource(); src.buffer = noiseBuffer(a); src.loop = true;
+    const lp = a.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value = 780;
+    const swell = a.createGain(); swell.gain.value = 0.9;
+    const lfo = a.createOscillator(); lfo.frequency.value = 0.07;
+    const lfoG = a.createGain(); lfoG.gain.value = 0.18;
+    lfo.connect(lfoG).connect(swell.gain); lfo.start();
+    src.connect(lp).connect(swell).connect(g); src.start();
+    live.push(src, lfo);
+  }else{
+    // 双耳节拍：左右耳差 2.6Hz（δ 波段）。载波由今晚的 Done 数量微调，模拟“个性化”
+    const base = 168 + (today().done.length * 4);
+    const beat = sound === "brainwave" ? 2.6 : 4.5;
+    [[base,-1],[base+beat,1]].forEach(([f,pan])=>{
+      const o = a.createOscillator(); o.type = "sine"; o.frequency.value = f;
+      const p = a.createStereoPanner ? a.createStereoPanner() : null;
+      const og = a.createGain(); og.gain.value = 0.5;
+      if(p){ p.pan.value = pan; o.connect(og).connect(p).connect(g); }
+      else { o.connect(og).connect(g); }
+      o.start(); live.push(o);
+    });
+    // 暖垫音
+    const pad = a.createGain(); pad.gain.value = 0.16;
+    const lp = a.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value = 420;
+    [110,164.8,220].forEach((f,i)=>{
+      const o = a.createOscillator(); o.type="triangle"; o.frequency.value = f; o.detune.value = i*4;
+      o.connect(pad); o.start(); live.push(o);
+    });
+    pad.connect(lp).connect(g);
+    // 白噪音薄底
+    const src = a.createBufferSource(); src.buffer = noiseBuffer(a); src.loop = true;
+    const ng = a.createGain(); ng.gain.value = 0.1;
+    const nlp = a.createBiquadFilter(); nlp.type="lowpass"; nlp.frequency.value = 500;
+    src.connect(nlp).connect(ng).connect(g); src.start(); live.push(src);
+  }
+  master.gain.cancelScheduledValues(a.currentTime);
+  master.gain.setValueAtTime(0.0001, a.currentTime);
+  master.gain.exponentialRampToValueAtTime(Math.max(vol(),0.001), a.currentTime + 4);
+}
+function bell(){
+  const a = ctx(); if(!a) return;
+  const o = a.createOscillator(), g = a.createGain();
+  o.type="sine"; o.frequency.value = 528;
+  g.gain.setValueAtTime(0.0001, a.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.16*vol()/0.5*0.6+0.0001, a.currentTime+0.06);
+  g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime+2.2);
+  o.connect(g).connect(master); o.start(); o.stop(a.currentTime+2.4);
+}
+function stopAudio(){
+  if(actx && master){
+    try{
+      master.gain.cancelScheduledValues(actx.currentTime);
+      master.gain.setValueAtTime(master.gain.value, actx.currentTime);
+      master.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + 1.2);
+    }catch(e){}
+  }
+  const dying = live.slice(); live = [];
+  setTimeout(()=>{ dying.forEach(n=>{ try{ n.stop && n.stop(); n.disconnect(); }catch(e){} }); }, 1400);
+}
+$("#vol").addEventListener("input", ()=>{
+  if(master && actx && playing){ master.gain.setTargetAtTime(Math.max(vol(),0.0001), actx.currentTime, 0.2); }
+});
+
+/* 呼吸引导 4-7-8 */
+const MED_LINES = ["把肩膀放下来","从鼻子吸气，数四拍","停在这里，不用急","慢慢吐掉，比吸气长一倍","再来一次，不用做对"];
+function runBreath(){
+  const el = $("#breath"); el.style.opacity = "1";
+  let phase = 0, line = 0;
+  const seq = [[4000,1.55,"吸气"],[7000,1.55,"屏息"],[8000,0.75,"呼气"]];
+  function step(){
+    const [ms,scale,lbl] = seq[phase];
+    el.style.transitionDuration = ms+"ms";
+    el.style.transform = "scale("+scale+")";
+    $("#ringLbl").textContent = lbl + " · " + MED_LINES[line % MED_LINES.length];
+    if(phase===0) bell();
+    phase = (phase+1)%3; if(phase===0) line++;
+    breathId = setTimeout(step, ms);
+  }
+  step();
+}
+function stopBreath(){
+  clearTimeout(breathId); breathId = null;
+  const el = $("#breath"); el.style.opacity = "0"; el.style.transform = "scale(1)";
+}
+
+/* 计时环 */
+const CIRC = 2*Math.PI*84;
+function resetRing(){
+  $("#ringArc").style.strokeDashoffset = CIRC;
+  $("#ringTime").textContent = durMin>=1 ? pad(Math.floor(durMin))+":00" : "00:30";
+  $("#ringLbl").textContent = "未开始";
+}
+resetRing();
+function renderTimer(){
+  const left = Math.max(0, endAt - Date.now());
+  const m = Math.floor(left/60000), s = Math.floor(left%60000/1000);
+  $("#ringTime").textContent = pad(m)+":"+pad(s);
+  $("#ringArc").style.strokeDashoffset = CIRC * (left/totalMs);
+  if(sound !== "meditate") $("#ringLbl").textContent = "播放中";
+  if(left <= 0) finish();
+}
+$("#playBtn").addEventListener("click", ()=>{
+  if(playing) return;
+  playing = true;
+  totalMs = durMin*60000; endAt = Date.now() + totalMs;
+  $("#playBtn").textContent = "播放中…"; $("#playBtn").disabled = true;
+  $("#stopBtn").hidden = false;
+  $("#playerLede").textContent = "屏幕可以熄掉。到点会自己停。";
+  startAudio();
+  if(sound === "meditate") runBreath();
+  renderTimer();
+  timerId = setInterval(renderTimer, 250);
+});
+$("#stopBtn").addEventListener("click", ()=> finish(true));
+
+function finish(early){
+  if(!playing) return;
+  playing = false;
+  clearInterval(timerId); stopBreath(); stopAudio();
+  $("#playBtn").textContent = "开始播放"; $("#playBtn").disabled = false;
+  $("#stopBtn").hidden = true;
+  resetRing();
+  const t = today();
+  t.sound = sound;
+  let gained = 0;
+  if(!t.checked){
+    t.checked = true;
+    gained = 20;
+    if(streak() % 7 === 0) gained += 50;
+    S.points += gained;
+  }
+  save();
+  $("#rewardLine").textContent = gained ? ("+"+gained+" 灯火 · 连续 "+streak()+" 天") : ("今天的灯火已经拿过了 · 连续 "+streak()+" 天");
+  setStep("sealed");
+  if(early) toast("提前结束也算打烊");
+}
+
+/* ────────── 晨报 ────────── */
+let rate = {closure:null, onset:null};
+const YKEY = fmt(shift(-1));
+function renderDots(host, key){
+  const el = $(host); el.innerHTML = "";
+  for(let i=1;i<=5;i++){
+    const b = document.createElement("button");
+    b.textContent = i;
+    b.setAttribute("aria-pressed", String(rate[key]===i));
+    b.addEventListener("click", ()=>{ rate[key] = i; renderDots(host,key); $("#saveRate").disabled = !(rate.closure&&rate.onset); });
+    el.appendChild(b);
+  }
+}
+function renderMorning(){
+  const y = S.days[YKEY];
+  if(y && y.rating){ rate = {closure:y.rating.closure, onset:y.rating.onset}; }
+  renderDots("#dotsClosure","closure"); renderDots("#dotsOnset","onset");
+  $("#saveRate").disabled = !(rate.closure && rate.onset);
+  if(y && y.rating){
+    $("#mornTitle").textContent = "昨晚记下了。";
+    $("#mornLede").textContent = "想改也可以，改完再点一次。";
+    $("#saveRate").textContent = "更新";
+  }else{
+    $("#mornTitle").textContent = "昨晚怎么样？";
+    $("#mornLede").textContent = "两个问题，十秒钟。";
+    $("#saveRate").textContent = "记下来";
+  }
+  drawChart();
+}
+$("#saveRate").addEventListener("click", ()=>{
+  if(!S.days[YKEY]) S.days[YKEY] = {done:[],worries:0,checked:true,sound:null,rating:null};
+  S.days[YKEY].rating = {closure:rate.closure, onset:rate.onset};
+  save(); drawChart(); renderMorning(); toast("记下了，只存在这台设备");
+});
+function drawChart(){
+  const days = [];
+  for(let i=6;i>=0;i--){ const k = fmt(shift(-i)); days.push({k, d:shift(-i), r:(S.days[k]&&S.days[k].rating)||null}); }
+  const W=316,H=150,L=26,R=10,T=12,B=24;
+  const x = i => L + i*((W-L-R)/6);
+  const y = v => T + (5-v)*((H-T-B)/4);
+  function path(key){
+    let d="", started=false;
+    days.forEach((dd,i)=>{
+      if(!dd.r) { started=false; return; }
+      d += (started?" L ":" M ") + x(i).toFixed(1) + " " + y(dd.r[key]).toFixed(1);
+      started = true;
+    });
+    return d.trim();
+  }
+  function pts(key,color){
+    return days.map((dd,i)=> dd.r ? '<circle cx="'+x(i).toFixed(1)+'" cy="'+y(dd.r[key]).toFixed(1)+'" r="2.6" fill="'+color+'"></circle>' : "").join("");
+  }
+  const grid = [1,3,5].map(v=>
+    '<line x1="'+L+'" y1="'+y(v)+'" x2="'+(W-R)+'" y2="'+y(v)+'" stroke="rgba(226,220,209,0.07)" stroke-width="1"></line>'+
+    '<text x="'+(L-7)+'" y="'+(y(v)+3.5)+'" text-anchor="end" fill="#6b7280" font-size="9" font-family="IBM Plex Mono,monospace">'+v+'</text>'
+  ).join("");
+  const xl = days.map((dd,i)=>
+    '<text x="'+x(i).toFixed(1)+'" y="'+(H-7)+'" text-anchor="middle" fill="#6b7280" font-size="9" font-family="IBM Plex Mono,monospace">'+(dd.d.getMonth()+1)+"/"+dd.d.getDate()+'</text>'
+  ).join("");
+  $("#chartHost").innerHTML =
+    '<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" role="img" aria-label="最近七天完结感与入睡速度评分">'+
+      grid + xl +
+      '<path d="'+path("closure")+'" fill="none" stroke="#d3a06e" stroke-width="1.6" stroke-linejoin="round"></path>'+
+      '<path d="'+path("onset")+'" fill="none" stroke="#7b83a8" stroke-width="1.6" stroke-linejoin="round"></path>'+
+      pts("closure","#d3a06e") + pts("onset","#7b83a8") +
+    '</svg>';
+  const rated = days.filter(d=>d.r);
+  $("#mornAvg").textContent = rated.length ? ("完结感均分 "+(rated.reduce((a,b)=>a+b.r.closure,0)/rated.length).toFixed(1)) : "";
+}
+
+/* ────────── 日历与灯火 ────────── */
+function streak(){
+  let n=0;
+  for(let i=0;i<400;i++){
+    const k = fmt(shift(-i));
+    if(S.days[k] && S.days[k].checked) n++;
+    else if(i>0) break;
+  }
+  return n;
+}
+const SHOP = [
+  {nm:"解锁「雨落屋檐」音轨", cost:200},
+  {nm:"次日闹钟延后 15 分钟券", cost:120},
+  {nm:"实体真丝眼罩", cost:800}
+];
+function renderCalendar(){
+  const now = new Date(), yy = now.getFullYear(), mm = now.getMonth();
+  $("#calMonth").textContent = yy+" 年 "+(mm+1)+" 月";
+  const first = new Date(yy,mm,1).getDay(), last = new Date(yy,mm+1,0).getDate();
+  const grid = $("#calGrid"); grid.innerHTML = "";
+  ["日","一","二","三","四","五","六"].forEach(d=>{
+    const e = document.createElement("div"); e.className="cal-dow"; e.textContent=d; grid.appendChild(e);
+  });
+  let lit = 0;
+  for(let i=0;i<first;i++){ const e=document.createElement("div"); e.className="cal-cell blank"; grid.appendChild(e); }
+  for(let d=1;d<=last;d++){
+    const k = yy+"-"+pad(mm+1)+"-"+pad(d);
+    const e = document.createElement("div");
+    e.className = "cal-cell" + (S.days[k]&&S.days[k].checked ? " lit":"") + (k===TODAY?" today":"");
+    e.textContent = d;
+    if(S.days[k]&&S.days[k].checked) lit++;
+    grid.appendChild(e);
+  }
+  $("#calCount").textContent = "本月 "+lit+" 盏";
+  $("#statStreak").textContent = streak();
+  $("#statPoints").textContent = S.points;
+  const shop = $("#shop"); shop.innerHTML = "";
+  SHOP.forEach(item=>{
+    const row = document.createElement("div"); row.className = "shop-item";
+    const done = S.redeemed.indexOf(item.nm) >= 0;
+    row.innerHTML = '<div><div class="shop-nm"></div><div class="shop-cost">'+item.cost+' 灯火</div></div>';
+    row.querySelector(".shop-nm").textContent = item.nm;
+    const b = document.createElement("button");
+    b.textContent = done ? "已兑换" : "兑换";
+    b.disabled = done || S.points < item.cost;
+    b.addEventListener("click", ()=>{
+      S.points -= item.cost; S.redeemed.push(item.nm); save(); renderCalendar(); toast("已兑换：" + item.nm);
+    });
+    row.appendChild(b); shop.appendChild(row);
+  });
+}
+
+/* ────────── 总结板块（按需上云） ────────── */
+let range = "week", sampleFn = undefined;
+$$("#rangeSeg button").forEach(b=> b.addEventListener("click", ()=>{
+  range = b.dataset.range;
+  $$("#rangeSeg button").forEach(x=> x.setAttribute("aria-pressed", String(x===b)));
+  renderReport();
+}));
+function rangeDays(){
+  const n = range==="week" ? 7 : 30, out = [];
+  for(let i=n;i>=1;i--){
+    const k = fmt(shift(-i)), d = S.days[k];
+    if(d && d.done && d.done.length) out.push({k, d:shift(-i), items:d.done});
+  }
+  return out;
+}
+function renderReport(){
+  syncCfgUI();
+  const days = rangeDays();
+  $("#rawHead").textContent = (range==="week"?"本周":"本月")+"清单 · 本机";
+  const raw = $("#rawList"); raw.innerHTML = "";
+  if(!days.length){
+    const e = document.createElement("p"); e.className="note"; e.textContent="这段时间还没有存档记录。";
+    raw.appendChild(e);
+  }
+  days.forEach(dd=>{
+    const row = document.createElement("div"); row.className="week-day";
+    row.innerHTML = '<span class="d"></span><span class="items"></span>';
+    row.querySelector(".d").textContent = (dd.d.getMonth()+1)+"/"+dd.d.getDate();
+    row.querySelector(".items").textContent = dd.items.join(" · ");
+    raw.appendChild(row);
+  });
+  if(S.aiConsent){
+    $("#consentCard").hidden = true; $("#reportBody").hidden = false;
+    runSummary(days);
+  }else{
+    $("#consentCard").hidden = false; $("#reportBody").hidden = true;
+  }
+}
+$("#consentYes").addEventListener("click", ()=>{ S.aiConsent = true; save(); renderReport(); });
+$("#consentNo").addEventListener("click", ()=>{ $("#consentCard").hidden = true; toast("只看本机列表，没有上传"); });
+$("#revoke").addEventListener("click", ()=>{ S.aiConsent = false; save(); renderReport(); toast("已撤回，不再上传"); });
+
+/* ── 模型通道设置 ── */
+const provLabel = ()=> S.ai.provider === "dashscope" ? ("阿里云百炼 · " + (S.ai.model || "qwen-plus")) : "内置 AI";
+function syncCfgUI(){
+  $("#aiCfgNow").textContent = provLabel();
+  const t = $("#consentTarget"); if(t) t.textContent = provLabel();
+  $$("#provSeg button").forEach(b=> b.setAttribute("aria-pressed", String(b.dataset.prov === S.ai.provider)));
+  $("#dsFields").hidden = S.ai.provider !== "dashscope";
+  $("#dsBase").value = S.ai.base; $("#dsModel").value = S.ai.model; $("#dsKey").value = S.ai.key;
+}
+$("#aiCfgToggle").addEventListener("click", ()=>{
+  const body = $("#aiCfgBody"), open = body.hidden;
+  body.hidden = !open;
+  $("#aiCfgToggle").setAttribute("aria-expanded", String(open));
+});
+$$("#provSeg button").forEach(b=> b.addEventListener("click", ()=>{
+  S.ai.provider = b.dataset.prov; save(); syncCfgUI();
+  if(S.aiConsent) renderReport();
+}));
+$("#dsSave").addEventListener("click", ()=>{
+  S.ai.base = $("#dsBase").value.trim() || defaultAI().base;
+  S.ai.model = $("#dsModel").value.trim() || "qwen-plus";
+  S.ai.key = $("#dsKey").value.trim();
+  save(); syncCfgUI(); toast("已保存到本机");
+  if(S.aiConsent) renderReport();
+});
+$("#dsClear").addEventListener("click", ()=>{
+  S.ai.key = ""; save(); syncCfgUI(); toast("Key 已从本机删除");
+});
+
+function localFallback(days, msg){
+  const all = days.reduce((a,d)=> a.concat(d.items), []);
+  const words = {};
+  all.forEach(t=> t.split(/[，,。、\s]/).forEach(w=>{ w=w.trim(); if(w.length>=2) words[w]=(words[w]||0)+1; }));
+  const top = Object.keys(words).sort((a,b)=> words[b]-words[a]).slice(0,4);
+  $("#kwHost").innerHTML = "";
+  (top.length?top:["还没有足够的记录"]).forEach(w=>{ const s=document.createElement("span"); s.textContent=w; $("#kwHost").appendChild(s); });
+  $("#summaryHost").textContent = "这段时间你一共存档了 " + all.length + " 件事，覆盖 " + days.length + " 天。" + (msg||"");
+}
+/* 语气规则：这一段是产品的核心，不是提示词技巧。
+   用户点开周报，是想看见自己做过什么，不是来接受评价。
+   所以禁掉一切「先说它不够大、再翻转拔高」的写法。 */
+const TONE_RULES =
+  "你在帮一个人回顾他睡前记下的「今天做成的事」。写一段总结给他看。\n\n" +
+  "语气：平静、具体，像朋友随口说起，不像颁奖词，也不像点评。用第二人称「你」。只写他真的写过的事，尽量用他自己的词。\n\n" +
+  "以下写法一律禁止，出现任何一条就算失败：\n" +
+  "1. 评价这些事的大小、轻重、是否值得。禁止出现：惊天动地、大事、小事、微小、看似微小、不起眼、平凡、琐碎、微不足道。\n" +
+  "2. 先抑后扬的转折。禁止出现：虽然…但是、其实、并不…却、看似…实则。\n" +
+  "3. 居高临下的定性和升华。禁止出现：这说明你、你是一个…的人、认真生活、认真过日子、热爱生活。\n" +
+  "4. 打气、鼓劲、展望。禁止出现：加油、继续保持、明天会更好、你很棒、了不起、感叹号。\n" +
+  "5. 提问、建议、待办、提醒。\n\n" +
+  "写法：把这段时间出现过的事自然地串起来，该具体就具体。最后一句停在一件具体的事上，不要收尾升华。\n" +
+  "长度 70 字以内。\n\n" +
+  '只输出 JSON，不要代码块围栏：{"keywords":["3到5个中文关键词，每个2-6字，直接取自他写的内容"],"summary":"一段话"}';
+
+const BANNED = /惊天动地|虽然|其实|平凡|琐碎|微不足道|微小|不起眼|看似|并不|了不起|你很棒|加油|继续保持|说明你|你是一个|认真生活|认真过日子|热爱生活|！/;
+
+function buildPrompt(days, note){
+  const body = days.map(d=> (d.d.getMonth()+1)+"/"+d.d.getDate()+"：" + d.items.join("；")).join("\n");
+  return TONE_RULES + (note ? "\n\n" + note : "") +
+    "\n\n以下是他" + (range==="week"?"这一周":"这一个月") + "每天写下的内容：\n" + body;
+}
+const REWRITE_NOTE = "上一版用了被禁止的写法（评价事情大小，或先抑后扬，或升华定性）。请重写，直接从他做过的事写起，不要任何转折和总评。";
+
+/* ── 通道一：内置 AI（发布链接上可用） ── */
+async function callSample(prompt){
+  if(sampleFn === undefined){
+    sampleFn = null;
+    if(window.claude && typeof window.claude.use === "function"){
+      try{ sampleFn = await window.claude.use("sample"); }catch(e){ sampleFn = null; }
+    }
+  }
+  if(!sampleFn) throw {code:"unavailable"};
+  return await sampleFn.json(prompt, {modelTier:"quick", cache:false});
+}
+
+/* ── 通道二：阿里云百炼（OpenAI 兼容接口，需自有域名或本地打开） ── */
+async function callDashScope(prompt){
+  const c = S.ai;
+  // 填绝对地址 = 浏览器直连百炼，必须有 Key。
+  // 填相对地址（如 /api）= 走自建转发，Key 留在服务端，这里不需要。
+  const direct = /^https?:\/\//i.test(c.base);
+  if(direct && !c.key) throw {code:"no_key"};
+  const headers = {"Content-Type":"application/json"};
+  if(c.key) headers.Authorization = "Bearer " + c.key;
+  let r;
+  try{
+    r = await fetch(c.base.replace(/\/+$/,"") + "/chat/completions", {
+      method:"POST",
+      headers: headers,
+      body: JSON.stringify({
+        model: c.model || "qwen-plus",
+        messages: [{role:"user", content: prompt}],
+        response_format: {type:"json_object"},
+        temperature: 0.7
+      })
+    });
+  }catch(e){ throw {code:"blocked"}; }
+  if(!r.ok){
+    const t = await r.text().catch(()=> "");
+    throw {code: r.status === 401 ? "bad_key" : "http", message: r.status + " " + t.slice(0,120)};
+  }
+  const j = await r.json();
+  let txt = ((j.choices||[])[0]||{}).message;
+  txt = txt ? String(txt.content||"") : "";
+  txt = txt.replace(/^\s*```(?:json)?/i,"").replace(/```\s*$/,"").trim();
+  return JSON.parse(txt);
+}
+function callModel(prompt){
+  return S.ai.provider === "dashscope" ? callDashScope(prompt) : callSample(prompt);
+}
+
+const AI_ERR = {
+  unavailable: " 这个环境没有可用的内置 AI，以上为本机统计。",
+  blocked:     " 请求被页面沙箱拦截：claude.ai 托管的页面不允许访问外部接口。把这份 HTML 部署到你自己的域名下，或改用内置 AI。",
+  no_key:      " 还没填 API Key，去下面的模型设置里填。",
+  bad_key:     " API Key 被拒绝了，检查一下是不是百炼控制台里的那一个。",
+  rate_limited:" 调用太频繁，等一会儿再试。",
+  not_granted: " 你拒绝了这次调用，已改为本机统计。",
+  http:        " 接口返回了错误，已改为本机统计。"
+};
+
+let summaryToken = 0;
+async function runSummary(days){
+  const mine = ++summaryToken;
+  if(!days.length){ $("#kwHost").innerHTML = "<span>暂无记录</span>"; $("#summaryHost").textContent = "先完成一次打烊，这里就有内容了。"; return; }
+  $("#kwHost").innerHTML = "<span>生成中…</span>";
+  $("#summaryHost").textContent = "正在读你这段时间写下的事…";
+  try{
+    let data = await callModel(buildPrompt(days, ""));
+    if(mine !== summaryToken) return;
+    if(BANNED.test(String(data.summary||""))){
+      const retry = await callModel(buildPrompt(days, REWRITE_NOTE));
+      if(mine !== summaryToken) return;
+      if(!BANNED.test(String(retry.summary||""))) data = retry;
+    }
+    $("#kwHost").innerHTML = "";
+    (data.keywords||[]).slice(0,5).forEach(w=>{ const s=document.createElement("span"); s.textContent=String(w); $("#kwHost").appendChild(s); });
+    $("#summaryHost").textContent = String(data.summary||"");
+    $("#aiState").textContent = (S.ai.provider==="dashscope" ? "阿里云百炼 · " + (S.ai.model||"qwen-plus") : "内置 AI") + " · 原文未保存";
+  }catch(e){
+    if(mine !== summaryToken) return;
+    const code = (e && e.code) || "http";
+    if(code === "not_granted"){ S.aiConsent = false; save(); }
+    localFallback(days, AI_ERR[code] || AI_ERR.http);
+    $("#aiState").textContent = code === "not_granted" ? "未授权 · 仅本机统计" : "AI 未生效 · 仅本机统计";
+  }
+}
+
+/* ────────── 左栏：模块映射 ────────── */
+const MAP = [
+  {i:"01", nm:"提醒模块",       dc:"就寝前推送，把入口递到眼前", go:()=>{ setTab("night"); $("#lock").hidden=false; }},
+  {i:"02", nm:"存档今天 · Done 清单", dc:"写三件事，点完结，归档动画", go:()=> startRitual()},
+  {i:"03", nm:"清空明天 · 忧虑便签", dc:"写下焦虑，点放下，明早提醒", go:()=>{ setTab("night"); worries=[]; renderWorries(); setStep("worry"); }},
+  {i:"04", nm:"完结仪式 · 声音锚点", dc:"脑波 / 冥想 / 白噪音，浏览器实时合成", go:()=>{ setTab("night"); renderSounds(); setStep("player"); }},
+  {i:"05", nm:"一夜好眠报告",   dc:"晨间两项评分，七天折线", go:()=> setTab("morning")},
+  {i:"06", nm:"日历打卡与积分", dc:"播放结束自动打卡，灯火兑换", go:()=> setTab("calendar")},
+  {i:"07", nm:"Done 周 / 月报", dc:"接 LLM 生成关键词，先授权后上传", go:()=> setTab("report")}
+];
+const mapHost = $("#map");
+MAP.forEach(m=>{
+  const b = document.createElement("button");
+  b.innerHTML = '<span class="idx"></span><span class="nm"></span><span class="desc"></span>';
+  b.querySelector(".idx").textContent = m.i;
+  b.querySelector(".nm").textContent = m.nm;
+  b.querySelector(".desc").textContent = m.dc;
+  b.addEventListener("click", m.go);
+  mapHost.appendChild(b);
+});
+
+/* 色温 */
+const warm = $("#warm");
+warm.addEventListener("input", ()=>{
+  const v = parseInt(warm.value,10);
+  document.documentElement.style.setProperty("--warm", (v/100).toFixed(2));
+  $("#warmVal").textContent = v===0 ? "标准" : (v<40 ? "偏暖" : (v<75 ? "夜览" : "最暖"));
+});
+
+/* 重置 */
+$("#reset").addEventListener("click", ()=>{
+  const keepAI = S.ai;
+  S = seed(); S.ai = keepAI; save();
+  if(playing) finish(true);
+  renderHome(); setTab("night"); $("#lock").hidden = false;
+  toast("已重置为示例数据");
+});
+
+/* ────────── 启动 ────────── */
+renderHome();
+renderSounds();
+setTab("night");
+})();
+</script>
